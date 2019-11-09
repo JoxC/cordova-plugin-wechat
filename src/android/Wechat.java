@@ -129,7 +129,7 @@ public class Wechat extends CordovaPlugin {
     }
 
     protected void initWXAPI() {
-        IWXAPI api = getWxAPI(cordova.getActivity());
+        IWXAPI api = getWxAPI(cordova.getActivity().getApplicationContext());
         if(wx_preferences == null) {
             wx_preferences = preferences;
         }
