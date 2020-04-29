@@ -39,16 +39,19 @@ static BOOL swizzled = NO;
     return [cdvWechat handleWechatOpenURL:url];
 }
 
-- (BOOL)swizzleApplication:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
-    if (![userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb]) {
+- (BOOL)swizzleApplication:(UIApplication *)application continueUserActivity:(NSUserActivity *)userActivity
+        restorationHandler:(void (^)(NSArray * _Nullable))restorationHandler {
+    
+    CDVWechat *cdvWechat = [self.viewController getCommandInstance:@"wechat"];
+    NSString* universalLink = [[cdvWechat.commandDelegate settings] objectForKey:@"universallink"];
+    
+    if (![userActivity.activityType isEqualToString:NSUserActivityTypeBrowsingWeb] || ![userActivity.webpageURL.absoluteString hasPrefix:universalLink]) {
         if (swizzled) {
             return [self swizzleApplication:application continueUserActivity:userActivity restorationHandler:restorationHandler];
         }
         
         return NO;
     }
-    
-    CDVWechat *cdvWechat = [self.viewController getCommandInstance:@"wechat"];
     
     return [cdvWechat handleUserActivity:userActivity];
 
